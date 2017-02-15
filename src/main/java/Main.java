@@ -5,6 +5,9 @@ import java.io.*;
  */
 public class Main {
     private static final String PATHKEY = "C://ИБ//ЛР1//КАЮ_key.txt";
+    private static final String FIRST = "C://ИБ//ЛР1//1.txt";
+    private static final String SECOND = "C://ИБ//ЛР1//2.txt";
+    private static final String TRIRD = "C://ИБ//ЛР1//3.txt";
     private static final int DELTA = 0x9e3779b9;
 
     private static void writeToFile(String path, byte[] buffer) {
@@ -15,8 +18,68 @@ public class Main {
         }
     }
 
-    private static void encrypt(byte[] b, int[] k) {
+    private static void writeKeyToFile(String path, int[] mas) {
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+            out.writeObject(mas);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+    private static int[] readKey(String path) {
+        int[] mas = null;
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(path))) {
+            mas = (int[])in.readObject();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return mas;
+    }
+
+    private static byte[] encrypt(int[] v, int[] k) {
+        int v0 = v[0];
+        int v1 = v[1];
+        int sum = 0;
+
+        int k0 = k[0];
+        int k1 = k[1];
+        int k2 = k[2];
+        int k3 = k[3];
+
+        for (int i = 0; i < 32; i++) {
+            sum += DELTA;
+            v0 += ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
+            v1 += ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
+        }
+
+        v[0] = v0;
+        v[1] = v1;
+        return getBytes(v);
+    }
+
+    private static byte[] decrypt (int[]  v, int[] k) {
+        int v0 = v[0];
+        int v1 = v[1];
+        int sum = 0xC6EF3720;
+
+        int k0 = k[0];
+        int k1 = k[1];
+        int k2 = k[2];
+        int k3 = k[3];
+
+        for (int i = 0; i < 32; i++) {
+            v1 -= ((v0 << 4) + k2) ^ (v0 + sum) ^ ((v0 >> 5) + k3);
+            v0 -= ((v1 << 4) + k0) ^ (v1 + sum) ^ ((v1 >> 5) + k1);
+
+            sum -= DELTA;
+        }
+
+        v[0] = v0;
+        v[1] = v1;
+        return getBytes(v);
     }
 
     private static int[] getInts(byte[] b) {
@@ -42,22 +105,43 @@ public class Main {
     private static int[] generateKey() {
         int[] k = new int[4];
         for (int i = 0; i < 4; i++) {
-            k[i] = (int)(Math.random() * 10);
+            k[i] = (int)(Math.random() * 100000);
         }
         return k;
     }
 
 
     public static void main(String[] args) throws IOException {
-        FileInputStream fin = new FileInputStream("C://ИБ//ЛР1//1.txt");
+        FileInputStream fin = new FileInputStream(FIRST);
         try {
             byte[] buffer = new byte[8];
             fin.read(buffer, 0, buffer.length);
+
+            int[] key = generateKey();
+            int[] value = getInts(buffer);
+
+            writeKeyToFile(PATHKEY, key);
+            writeToFile(SECOND, encrypt(value, key));
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
             fin.close();
+        }
+
+        FileInputStream fin1 = new FileInputStream(SECOND);
+        try {
+            byte[] buffer = new byte[8];
+            fin1.read(buffer, 0, buffer.length);
+
+            int[] value = getInts(buffer);
+            int[] key = readKey(PATHKEY);
+
+            writeToFile(TRIRD, decrypt(value, key));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            fin1.close();
         }
 
     }
