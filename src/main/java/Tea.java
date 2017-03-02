@@ -4,7 +4,7 @@ public class Tea {
     public static byte[] generateKey() {
         byte[] k = new byte[16];
         for (int i = 0; i < 16; i++) {
-            k[i] = (byte)(Math.random() * 1000);
+            k[i] = (byte)(Math.random()*100);
         }
         return k;
     }

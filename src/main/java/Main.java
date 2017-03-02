@@ -1,11 +1,15 @@
 import java.io.*;
 
+//TODO 1) Ввод названия файла из командной строки(тотал командер) или интерфейса(свинг)
+//TODO 2) Разделить проект на 2 проекта. Один чисто экрипт, другой чисто декрипт
+//TODO 3) Создать jar для каждого проекта и запускать их с параметрами из тотал командера
+
 
 public class Main {
     private static final String PATHKEY = "C://ИБ//ЛР1//КАЮ_key.txt";
     private static final String FIRST = "C://ИБ//ЛР1//1.txt";
-    private static final String SECOND = "C://ИБ//ЛР1//2.txt";
-    private static final String TRIRD = "C://ИБ//ЛР1//3.txt";
+    private static final String SECOND = "C://ИБ//ЛР1//2.enc";
+    private static final String TRIRD = "C://ИБ//ЛР1//3.dec";
 
     private static void writeToFile(String path, byte[] buffer) {
         try (FileOutputStream fos = new FileOutputStream(path)) {
@@ -52,6 +56,5 @@ public class Main {
             fin1.close();
             fin2.close();
         }
-
     }
 }
