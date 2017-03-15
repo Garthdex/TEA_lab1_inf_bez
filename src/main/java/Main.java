@@ -12,7 +12,7 @@ public class Main {
 
     private static void printHelpToConsole() {
         System.out.println("Вы должны ввести параметры в таком порядке:" + "\n"
-                + "Encrypt-1.jar param1 param2 param3" + "\n"
+                + "encrypt.jar param1 param2 param3" + "\n"
                 + "где param1 - полный путь к текстовому файлу для кодирования" + "\n"
                 + "пример: C:/ИБ/ЛР1/1.txt" + "\n"
                 + "где param2 - полный путь к записи зашифрованного файла" + "\n"
