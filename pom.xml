@@ -8,7 +8,7 @@
     <artifactId>Encrypt</artifactId>
     <packaging>jar</packaging>
     <version>1</version>
-    <name>encrypt</name>
+    <name>tea</name>
     <build>
         <plugins>
             <plugin>
@@ -32,7 +32,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>encrypt</finalName>
+        <finalName>tea</finalName>
     </build>
 
 
